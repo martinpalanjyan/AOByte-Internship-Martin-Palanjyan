@@ -167,5 +167,3 @@ class inputElement extends DomElement {
 //     ]);
 //  document.body.appendChild(tree.draw());
 
-
-
