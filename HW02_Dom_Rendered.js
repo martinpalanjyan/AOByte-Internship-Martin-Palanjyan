@@ -1,5 +1,4 @@
-
-   /**
+/**
     * The signature function for my El function is el(type: string, attrs: object, children: DomElement | DomElement[]). 
     *  So, in general, it accepts the following:The type of DOM element to be generated ('div','span', etc. ), 
     * an object having tag characteristics (class, id, etc.), and child elements. 
@@ -12,7 +11,7 @@
     * @param {*} children 
     * @returns 
     */
-   function el(type, attrs, children) {
+function el(type, attrs, children) {
     switch (type) {
       case 'div':
         return new DivElement(attrs, children);
@@ -39,8 +38,38 @@
    */
   
   class DomElement {
-    draw() {}
+    constructor(type,attrs,children){
+      this.type = type;
+      this.attrs = attrs;
+      this.children = children;
+    }
+    generalDom(){
+      const general = document.createElement(this.type);
+      Object.entries(this.attrs).forEach(([k, v]) => {
+        general.setAttribute(k, v);
+      });
+      if (Array.isArray(this.children)) {
+        this.children.forEach(c => {
+          if (c instanceof DomElement) {
+            general.append(c.draw());
+          } else if (typeof c === 'string') {
+            general.append(document.createTextNode(c));
+          }
+        });
+      }else if (this.children instanceof DomElement) {
+        general.append(this.children.draw());
+      }else if (typeof this.children === 'string') {
+        general.append(document.createTextNode(this.children));
+      }
+      return general;
+    }
+    draw() {
+      return this.generalDom();
+    }
   }
+
+
+
   
   /**
    * Each class extending DomElement implements draw method
@@ -48,242 +77,52 @@
    */
   class DivElement extends DomElement {
     constructor(attrs, children) {
-      super();
-      this.attrs = attrs;
-      this.children = children;
-    }
-  
-    draw() {
-      const div = document.createElement('div');
-      Object.entries(this.attrs).forEach(([k, v]) => {
-        div.setAttribute(k, v);
-      });
-       if (Array.isArray(this.children)) {
-        this.children.forEach(c => {
-          if (c instanceof DomElement) {
-            div.append(c.draw());
-          } else if (typeof c === 'string') {
-            div.append(document.createTextNode(c));
-          }
-        });
-      }else if (this.children instanceof DomElement) {
-        div.append(this.children.draw());
-      }else if (typeof this.children === 'string') {
-        div.append(document.createTextNode(this.children));
-      }
-      return div;
+      super('div',attrs,children);
     }
   }
   
   class SpanElement extends DomElement {
     constructor(attrs, children) {
-      super();
-      this.attrs = attrs;
-      this.children = children;
-    }
-  
-    draw() {
-      const span = document.createElement('span');
-      Object.entries(this.attrs).forEach(([k, v]) => {
-        span.setAttribute(k, v);
-      });
-
-     if (Array.isArray(this.children)) {
-        this.children.forEach(c => {
-          if (c instanceof DomElement) {
-            span.append(c.draw());
-          } else if (typeof c === 'string') {
-            span.append(document.createTextNode(c));
-          }
-        });
-      }  else if (this.children instanceof DomElement) {
-        span.append(this.children.draw());
-      } else if (typeof this.children === 'string') {
-        span.append(document.createTextNode(this.children));
-      }
-  
-      return span;
+      super('span',attrs,children);
     }
   }
   
   class UlElement extends DomElement {
     constructor(attrs, children) {
-      super();
-      this.attrs = attrs;
-      this.children = children;
-    }
-  
-    draw() {
-    
-      const ul = document.createElement('ul');
-      Object.entries(this.attrs).forEach(([k, v]) => {
-        ul.setAttribute(k, v);
-      });
-        if(Array.isArray(this.children)){
-        this.children.forEach(c => {
-          if (c instanceof DomElement) {
-            ul.append(c.draw());
-          } else if (typeof c === 'string') {
-            ul.append(document.createTextNode(c));
-          }
-        });
-      }else if (this.children instanceof DomElement) {
-        ul.append(this.children.draw());
-      }else if (typeof this.children === 'string') {
-        ul.append(document.createTextNode(this.children));
-      }
-      return ul;
+      super('ul',attrs,children);
     }
  }
   
   
   class LiElement extends DomElement {
     constructor(attrs, children) {
-      super();
-      this.attrs = attrs;
-      this.children = children;
-    }
-    draw() {
-        const li = document.createElement('li');
-        Object.entries(this.attrs).forEach(([k, v]) => {
-            li.setAttribute(k, v);
-        });
-        if (Array.isArray(this.children)) {
-            this.children.forEach(c => {
-                if (c instanceof LiElement) {
-                    li.append(c.draw());
-                } else if (typeof c === 'string') {
-                    li.append(document.createTextNode(c));
-                }
-            });
-        } else if (this.children instanceof DomElement) {
-            li.append(this.children.draw());
-          }else if (typeof this.children === 'string') {
-            li.append(document.createTextNode(this.children));
-        }
-    
-        return li;
+      super('li',attrs,children);
     }
 }
 
 class FormElement extends DomElement {
     constructor(attrs, children) {
-      super();
-      this.attrs = attrs;
-      this.children = children;
-
-    }
-    draw() {
-        const form = document.createElement('form');
-        Object.entries(this.attrs).forEach(([k, v]) => {
-            form.setAttribute(k, v);
-        });
-        if (Array.isArray(this.children)) {
-            this.children.forEach(c => {
-                if (c instanceof DomElement) {
-                    form.append(c.draw());
-                } else if (typeof c === 'string') {
-                    form.append(document.createTextNode(c));
-                }
-            });
-        } else if (this.children instanceof DomElement) {
-            form.append(this.children.draw());
-          }else if (typeof this.children === 'string') {
-            form.append(document.createTextNode(this.children));
-        }
-    
-        return form;
+      super('form',attrs,children);
     }
 }
 
 class LabelElement extends DomElement {
     constructor(attrs, children) {
-      super();
-      this.attrs = attrs;
-      this.children = children;
-
-    }
-    draw() {
-        const label = document.createElement('label');
-        Object.entries(this.attrs).forEach(([k, v]) => {
-            label.setAttribute(k, v);
-        });
-        if (Array.isArray(this.children)) {
-            this.children.forEach(c => {
-                if (c instanceof DomElement) {
-                    label.append(c.draw());
-                } else if (typeof c === 'string') {
-                    label.append(document.createTextNode(c));
-                }
-            });
-        }else if (this.children instanceof DomElement) {
-            label.append(this.children.draw());
-          }else if (typeof this.children === 'string') {
-            label.append(document.createTextNode(this.children));
-        }
-    
-        return label;
+      super('label',attrs,children);
     }
 }
 
 
 class BrElement extends DomElement {
     constructor(attrs, children) {
-      super();
-      this.attrs = attrs;
-      this.children = children;
-
-    }
-    draw() {
-        const br = document.createElement('br');
-        Object.entries(this.attrs).forEach(([k, v]) => {
-            br.setAttribute(k, v);
-        });
-        if (Array.isArray(this.children)) {
-            this.children.forEach(c => {
-                if (c instanceof DomElement) {
-                    br.append(c.draw());
-                } else if (typeof c === 'string') {
-                    br.append(document.createTextNode(c));
-                }
-            });
-        } else if (this.children instanceof DomElement) {
-            br.append(this.children.draw());
-          }else if (typeof this.children === 'string') {
-            br.append(document.createTextNode(this.children));
-        }
-    
-        return br;
+      super('br',attrs,children);
     }
 }
 
 
 class inputElement extends DomElement {
     constructor(attrs, children) {
-      super();
-      this.attrs = attrs;
-      this.children = children;
-
-    }
-    draw() {
-        const input = document.createElement('input');
-        Object.entries(this.attrs).forEach(([k, v]) => {
-            input.setAttribute(k, v);
-        });
-        if (Array.isArray(this.children)) {
-            this.children.forEach(c => {
-                if (c instanceof DomElement) {
-                    input.append(c.draw());
-                } else if (typeof c === 'string') {
-                    input.append(document.createTextNode(c));
-                }
-            });
-        }else  if (this.children instanceof DomElement) {
-            input.append(this.children.draw());
-          }else if (typeof this.children === 'string') {
-            input.append(document.createTextNode(this.children));
-        }
-        return input;
+      super('input',attrs,children);
     }
 }
 
@@ -314,19 +153,19 @@ class inputElement extends DomElement {
 //Number 3 is passed
 
 
-//     const tree =
-//       el("form", {action: '/some_action'}, [
-//         el("label", {for: 'name'}, "First name:"),
-//         el("br", {}, null),
-//         el("input", {type: 'text', id: 'name', name: 'name', value: "My name"}, null),
-//         el("br", {}, null),
-//         el("label", {for: 'last_name'}, "Last name:"),
-//         el("br", {}, null),
-//         el("input", {type: 'text', id: 'last_name', name: 'last_name', value: "My second name"}, null),
-//         el("br", {}, null),
-//         el("input", {type: 'submit', value: 'Submit'}, null),
-//       ]);
-//    document.body.appendChild(tree.draw());
+//   const tree =
+//     el("form", {action: '/some_action'}, [
+//       el("label", {for: 'name'}, "First name:"),
+//       el("br", {}, null),
+//       el("input", {type: 'text', id: 'name', name: 'name', value: "My name"}, null),
+//       el("br", {}, null),
+//       el("label", {for: 'last_name'}, "Last name:"),
+//       el("br", {}, null),
+//       el("input", {type: 'text', id: 'last_name', name: 'last_name', value: "My second name"}, null),
+//       el("br", {}, null),
+//       el("input", {type: 'submit', value: 'Submit'}, null),
+//     ]);
+//  document.body.appendChild(tree.draw());
 
 
 
