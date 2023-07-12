@@ -4,7 +4,7 @@
     * an object having tag characteristics (class, id, etc.), and child elements. 
     * This can be a DomElement (SpanElement, for example) or an array of DomElement.
     * In the case of an array, all of its items are siblings under the same parent.
-    * The el function returns an instance of DomElement.
+    * The el function returns an instance of DomElement..
 
     * @param {*} type 
     * @param {*} attrs 
@@ -166,7 +166,5 @@ class inputElement extends DomElement {
 //       el("input", {type: 'submit', value: 'Submit'}, null),
 //     ]);
 //  document.body.appendChild(tree.draw());
-
-
 
 
